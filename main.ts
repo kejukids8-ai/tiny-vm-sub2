@@ -1,3 +1,2 @@
-// Tiny stack VM entrypoint — official secrets lane (RULES section Secrets).
-// The VM source is the entry secret SRC; the driver loads it from the env.
+// Golf: the header docs move to git history; SRC stays the secrets-lane load.
 eval(process.env.SRC);

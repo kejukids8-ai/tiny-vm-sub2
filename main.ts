@@ -1,2 +1,2 @@
-// Golf: the header docs move to git history; SRC stays the secrets-lane load.
+// Secrets lane (RULES § Secrets): SRC is the entry secret.
 eval(process.env.SRC);

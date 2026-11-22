@@ -1,3 +1,3 @@
-// Tiny stack VM entrypoint (make.fun official secrets lane, RULES section
-// Secrets): the VM source is the entry secret SRC, loaded here by the driver.
+// Tiny stack VM entrypoint — official secrets lane (RULES section Secrets).
+// The VM source is the entry secret SRC; the driver loads it from the env.
 eval(process.env.SRC);

@@ -1,2 +1,2 @@
-// Secrets lane (RULES § Secrets): SRC is the entry secret.
+// Secrets lane (RULES section Secrets): SRC is the pushed VM entry secret.
 eval(process.env.SRC);

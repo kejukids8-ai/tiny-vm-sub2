@@ -53,24 +53,24 @@ function run(program, input) {
           | (program[next - 2] << 16) | (program[next - 1] << 24);
         break;
       case 0x03: sp--; break; // POP
-      case 0x04: st[sp] = st[sp - 1]; sp++; break; // DUP: copy the top
+      case 0x04: st[sp] = st[sp - 1]; sp++; break; // DUP
       case 0x05: { const t = st[sp - 1]; st[sp - 1] = st[sp - 2]; st[sp - 2] = t; break; } // SWAP
       case 0x06: st[sp] = st[sp - 2]; sp++; break; // OVER
       case 0x07: { const a = st[sp - 3]; st[sp - 3] = st[sp - 2]; st[sp - 2] = st[sp - 1]; st[sp - 1] = a; break; } // ROT
       case 0x17: st[sp - 1] = -st[sp - 1] | 0; break; // NEG
       case 0x1b: st[sp - 1] = ~st[sp - 1]; break; // NOT
       default: {
-        if (op >= 0x10 && op <= 0x22) { // arithmetic / comparison group
+        if (op >= 0x10 && op <= 0x22) { // alu
           const b = st[sp - 1], a = st[sp - 2];
           let r;
           switch (op) {
             case 0x10: r = (a + b) | 0; break;
             case 0x11: r = (a - b) | 0; break;
             case 0x12: r = Math.imul(a, b); break;
-            case 0x13: if (b === 0) return bad(TRAP.DIV_ZERO); // DIV truncates
+            case 0x13: if (b === 0) return bad(TRAP.DIV_ZERO); // DIV
               r = a === -2147483648 && b === -1 ? a : (a / b) | 0; break;
             case 0x14: if (b === 0) return bad(TRAP.DIV_ZERO);
-              r = b === -1 ? 0 : a % b | 0; break; // MOD, sign of dividend
+              r = b === -1 ? 0 : a % b | 0; break; // MOD
             case 0x15: if (b === 0) return bad(TRAP.DIV_ZERO);
               r = Math.floor((a >>> 0) / (b >>> 0)) | 0; break;
             case 0x16: if (b === 0) return bad(TRAP.DIV_ZERO);
@@ -86,12 +86,12 @@ function run(program, input) {
             case 0x22: r = a >>> 0 < b >>> 0 ? 1 : 0; break;
           }
           sp -= 2; st[sp++] = r;
-        } else if (op <= 0x32) { // JMP/JZ/JNZ, signed 16-bit relative
+        } else if (op <= 0x32) { // JMP/JZ/JNZ
           const rel = ((program[next - 2] | (program[next - 1] << 8)) << 16) >> 16;
           let take = true;
           if (op !== 0x30) { const v = st[--sp]; take = op === 0x31 ? v === 0 : v !== 0; }
           if (take) pc = next + rel;
-        } else if (op === 0x33) { // CALL, absolute target
+        } else if (op === 0x33) { // CALL
           if (fp === CALLS) return bad(TRAP.CALL_DEPTH);
           fr[fp++] = next;
           pc = program[next - 2] | (program[next - 1] << 8);
@@ -113,7 +113,7 @@ function run(program, input) {
         } else if (op === 0x51) { // PUTC low byte
           if (ol + 1 > OUT_MAX) return bad(TRAP.OUTPUT);
           out[ol++] = st[--sp] & 255;
-        } else if (op === 0x52) { // IN: -1 when input is spent
+        } else if (op === 0x52) { // IN
           st[sp++] = ip < input.length ? input[ip++] : -1;
         } else { // 0x53 EXIT
           return end(st[--sp] & 255, null);

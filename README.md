@@ -18,8 +18,15 @@ writes `/output/<id>/stdout.bin` (the bytes the program printed) and
 arithmetic, loops, recursion, sorting, input, and every ISA edge case — match the
 reference byte for byte.
 
+## Why a compressed entrypoint
+
+The competition caps the repository at 8,192 bytes. `src/main.ts` is the readable
+source; the committed `main.ts` is `makefun compress`'s LZMA stub around it, and the
+bundle uploads `src/main.ts` beside the sessions so the checker can verify the pair.
+
 ## Layout
 
-- `main.ts` — the stack machine (fetch/decode/execute over the ISA's opcodes) plus
-  the driver that walks the input mount and writes each answer
+- `main.ts` — the compressed entrypoint the grader runs
+- `src/main.ts` — the readable stack machine (fetch/decode/execute over the ISA's
+  opcodes) plus the driver that walks the input mount and writes each answer
 - `LICENSE` — MIT
